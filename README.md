@@ -6,6 +6,12 @@ VisualStep converts spoken teacher instructions into structured, emoji-annotated
 
 ---
 
+## Live Demo
+
+🚀 Try it here: [VisualStep on Hugging Face Spaces](https://huggingface.co/spaces/lsadouk1111/VisualStep-app)
+
+---
+
 ## Overview
 
 Children with ADHD struggle to retain multi-step verbal instructions. VisualStep addresses this by automatically decomposing teacher speech into a maximum of five short, imperative steps — each paired with a visual emoji — formatted as a JSON card displayed on a classroom screen or printed card.
@@ -30,8 +36,7 @@ Children with ADHD struggle to retain multi-step verbal instructions. VisualStep
 
 - **Base model:** [microsoft/Phi-3-mini-4k-instruct](https://huggingface.co/microsoft/Phi-3-mini-4k-instruct)
 - **Fine-tuning:** QLoRA (r=16, α=32), single NVIDIA T4 GPU (Google Colab free tier)
-- **HuggingFace model:** [lsadouk1111/VisualStep](https://huggingface.co/lsadouk1111/VisualStep)
-- **Live demo:** [lsadouk1111/VisualStep-app](https://huggingface.co/spaces/lsadouk1111/VisualStep-app)
+- **🤗 Fine-tuned model:** [lsadouk1111/VisualStep](https://huggingface.co/lsadouk1111/VisualStep)
 
 ---
 
@@ -41,11 +46,12 @@ Children with ADHD struggle to retain multi-step verbal instructions. VisualStep
 - 1,000 **real** transcripts from Oak National Academy lessons (Years 1–6, English/Maths/Science)
 - 1,000 **synthetic** pairs generated with GPT-4o-mini
 
-| Split | Size |
-|-------|------|
-| Train | 1,600 |
-| Validation | 200 |
-| Test | 200 |
+| Split | File | Size |
+|-------|------|------|
+| Full dataset | `data/adhd_dataset_final.csv` | 2,000 |
+| Train | `data/train_set_1600.csv` | 1,600 |
+| Validation | `data/dev_set_200.csv` | 200 |
+| Test | `data/test_set_200.csv` | 200 |
 
 Year distribution: Y1=421, Y2=517, Y3=217, Y4=357, Y5=239, Y6=249  
 Subject distribution: English=816, Science=618, Maths=566  
@@ -74,14 +80,27 @@ Evaluated on the 200-item held-out test set against three zero-shot baselines.
 
 ```
 VisualStep/
-├── data/
-│   └── test_outputs_visualstep_corrected.csv   # Test set with model outputs
-├── evaluation/
-│   ├── human_evaluation.csv                    # Two-examiner annotation (κ=0.756)
-│   └── run_metrics.py                          # BLEU-4, ROUGE, ACI metrics script
+├── README.md
 ├── app/
-│   └── app.py                                  # Gradio HuggingFace Spaces app
-└── README.md
+│   └── app.py                                       # Gradio HuggingFace Spaces app
+├── data/
+│   ├── adhd_dataset_final.csv                       # Full 2,000-pair dataset
+│   ├── train_set_1600.csv                           # Training split
+│   ├── dev_set_200.csv                              # Validation split
+│   ├── test_set_200.csv                             # Test split (inputs only)
+│   └── test_outputs_visualstep.csv                  # Test set + VisualStep outputs
+├── evaluation/
+│   ├── run_metrics.py                               # BLEU-4, ROUGE, ACI metrics script
+│   └── human_evaluation.csv                         # Two-examiner annotation (κ=0.756)
+├── notebooks/
+│   ├── VisualStep_FineTuning_Phi4Mini_vf.ipynb      # Fine-tuning notebook
+│   ├── VisualStep_Baselines_Inference.ipynb         # Zero-shot Phi-3 Mini & Gemma 2 2B
+│   └── VisualStep_GroqAI_Baselines_vf.ipynb        # Zero-shot Qwen3.8 27B (GroqAI)
+└── results/
+    ├── test_outputs_visualstep.csv
+    ├── test_outputs_phi3_zeroshot.csv
+    ├── test_outputs_qwen27b_zeroshot.csv
+    └── test_outputs_gemma2_2b_zeroshot.csv
 ```
 
 ---
